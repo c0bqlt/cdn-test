@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-const Widget = () => {
+const Widget = ({ title }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const title = "Dacă-i dau una pe ceafă, îl trimit la Doamne-Doamne";
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
