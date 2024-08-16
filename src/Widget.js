@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const Widget = ({ title }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleOpen = () => setIsOpen(!isOpen);
 
   return (
