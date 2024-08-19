@@ -4,10 +4,18 @@ import Widget from "./Widget"; // Import your Widget component
 
 const rootElement = document.getElementById("app");
 
-// Define props for the Widget component
-const widgetProps = {
-  title: "Custom Widget Title",
-};
+if (rootElement) {
+  // Retrieve title prop from a global variable or from a data attribute on the root element
+  const title =
+    window.customWidgetTitle ||
+    rootElement.getAttribute("data-title") ||
+    "Default Title";
 
-// Render the Widget component
-ReactDOM.render(React.createElement(Widget, widgetProps), rootElement);
+  // Define props for the Widget component
+  const widgetProps = {
+    title: title,
+  };
+
+  // Render the Widget component
+  ReactDOM.render(React.createElement(Widget, widgetProps), rootElement);
+}
