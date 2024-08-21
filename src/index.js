@@ -1,20 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Widget from "./Widget"; // Import your Widget component
+import ChatWidget from "./ChatWidget"; // Import your Widget component
 
-window.onload = function () {
-  const rootElement = document.getElementById("app");
-
-  if (rootElement) {
-    const title =
-      window.customWidgetTitle ||
-      rootElement.getAttribute("data-title") ||
-      "Default Title";
-
-    const widgetProps = {
-      title: title,
-    };
-
-    ReactDOM.render(React.createElement(Widget, widgetProps), rootElement);
+class ChatBotElement extends HTMLElement {
+  connectedCallback() {
+    // This method is called when the element is added to the DOM
+    ReactDOM.render(<ChatWidget />, this);
   }
-};
+
+  disconnectedCallback() {
+    // Cleanup when the element is removed from the DOM
+    ReactDOM.unmountComponentAtNode(this);
+  }
+}
+
+// Define the custom element, associating it with the <chat-bot> tag
+customElements.define("chat-bot", ChatBotElement);
