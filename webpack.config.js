@@ -16,6 +16,10 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+      {
+        test: /\.css$/, // This rule will handle CSS files
+        use: ["style-loader", "css-loader"], // Loaders to handle the CSS
+      },
     ],
   },
   resolve: {

@@ -16,3 +16,14 @@ class ChatBotElement extends HTMLElement {
 
 // Define the custom element, associating it with the <chat-bot> tag
 customElements.define("chat-bot", ChatBotElement);
+
+window.onload = function () {
+  // Check if a <chat-bot> element is present
+  let chatBotElement = document.querySelector("chat-bot");
+
+  // If no <chat-bot> is found, create one and add it to the DOM
+  if (!chatBotElement) {
+    chatBotElement = document.createElement("chat-bot");
+    document.body.appendChild(chatBotElement);
+  }
+};
