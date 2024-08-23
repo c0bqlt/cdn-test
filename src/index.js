@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ChatWidget from "./ChatWidget"; // Import your Widget component
+import "./styles.css";
 
 // Function to load an external CSS file by dynamically injecting a <link> tag
 function loadExternalCSS(url) {

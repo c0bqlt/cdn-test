@@ -1,44 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import "./chat-input.css";
 
 const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div className="chat-input-container">
       <input
         type="text"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Scrie un mesaj..."
-        style={{
-          flex: 1,
-          padding: "0.5rem 1rem", // px-4 py-2
-          border: "1px solid #D1D5DB", // Tailwind's default border color
-          borderRadius: "0.5rem", // rounded-lg
-          outline: "none", // focus:outline-none
-          transition: "box-shadow 0.2s ease",
-          fontSize: "17px",
-        }}
-        onFocus={(e) =>
-          (e.target.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.5)")
-        } // focus:ring-1 focus:ring-blue-500
-        onBlur={(e) => (e.target.style.boxShadow = "none")}
+        className={`chat-input ${isFocused && "chat-input-focus"}`}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
       <button
         onClick={handleSend}
-        style={{
-          marginLeft: "0.5rem", // ml-2
-          padding: "0.6rem 1rem", // px-4 py-2
-          backgroundColor: "#3B82F6", // bg-blue-500
-          color: "#FFFFFF", // text-white
-          borderRadius: "0.5rem", // rounded-lg
-          cursor: "pointer",
-          transition: "background-color 0.2s ease",
-          border: "none",
-        }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = "#1E40AF")} // hover:bg-blue-700
-        onMouseLeave={(e) => (e.target.style.backgroundColor = "#3B82F6")}
+        className={`chat-input-button ${
+          isHovered && "chat-input-button-hover"
+        }`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        type="button"
       >
-        <i className="fas fa-paper-plane" style={{ fontSize: "17px" }}></i>
+        <i className="fas fa-paper-plane chat-input-icon"></i>
       </button>
     </div>
   );

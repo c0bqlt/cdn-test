@@ -1,0 +1,38 @@
+.chat-input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .chat-input {
+    flex: 1;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border: 1px solid #d1d5db; /* Tailwind's default border color */
+    border-radius: 0.5rem; /* rounded-lg */
+    outline: none; /* focus:outline-none */
+    transition: box-shadow 0.2s ease;
+    font-size: 17px;
+  }
+  
+  .chat-input-focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-1 focus:ring-blue-500 */
+  }
+  
+  .chat-input-button {
+    margin-left: 0.5rem; /* ml-2 */
+    padding: 0.6rem 1rem; /* px-4 py-2 */
+    background-color: #3b82f6; /* bg-blue-500 */
+    color: #ffffff; /* text-white */
+    border-radius: 0.5rem; /* rounded-lg */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+  }
+  
+  .chat-input-button-hover {
+    background-color: #1e40af; /* hover:bg-blue-700 */
+  }
+  
+  .chat-input-icon {
+    font-size: 17px;
+  }
+  

@@ -1,0 +1,9 @@
+.chat-window-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .chat-window-input-container {
+    padding: 0.5rem;
+  }

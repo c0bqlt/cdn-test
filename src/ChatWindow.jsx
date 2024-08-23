@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatHeader from "./ChatHeader";
+import "./chat-window.css";
 
 const ChatWindow = ({ onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -49,10 +50,10 @@ const ChatWindow = ({ onClose }) => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div className="chat-window-container">
       <ChatHeader onClose={onClose} />
       <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
-      <div style={{ padding: "0.5rem" }}>
+      <div className="chat-window-input-container">
         <ChatInput
           userInput={userInput}
           setUserInput={setUserInput}
