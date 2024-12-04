@@ -1,32 +1,21 @@
-import React, { useState } from "react";
-import "./chat-input.css";
+import React from "react";
 
 const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <div className="chat-input-container">
+    <div className="flex items-center">
       <input
         type="text"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Scrie un mesaj..."
-        className={`chat-input ${isFocused && "chat-input-focus"}`}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
       <button
         onClick={handleSend}
-        className={`chat-input-button ${
-          isHovered && "chat-input-button-hover"
-        }`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        type="button"
+        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
       >
-        <i className="fas fa-paper-plane chat-input-icon"></i>
+        <i className="fa-solid fa-paper-plane" />
       </button>
     </div>
   );

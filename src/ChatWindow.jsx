@@ -2,12 +2,38 @@ import React, { useState, useEffect, useRef } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatHeader from "./ChatHeader";
-import "./chat-window.css";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const ChatWindow = ({ onClose }) => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [followUpQuestions, setFollowUpQuestions] = useState([]);
   const messagesEndRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState("");
+
+  useEffect(() => {
+    const initializeFingerprint = async () => {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      const fingerprintId = result.visitorId;
+      setSessionId(fingerprintId);
+
+      const fetchPreviousMessages = async () => {
+        const response = await fetch(
+          `https://chatbot-api-yuzt4.ondigitalocean.app/history/${fingerprintId}`
+        );
+        const data = await response.json();
+        setMessages(data.messages || []);
+      };
+
+      fetchPreviousMessages();
+    };
+
+    if (!sessionId) {
+      initializeFingerprint();
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -17,30 +43,80 @@ const ChatWindow = ({ onClose }) => {
     scrollToBottom();
   }, [messages]);
 
-  const fetchBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("Hello World");
-      }, 400);
-    });
-  };
-
   const handleSend = async () => {
+    setFollowUpQuestions([]);
     if (userInput.trim()) {
       const newMessage = { text: userInput, sender: "user" };
       setMessages([...messages, newMessage]);
       setUserInput("");
+      setLoading(true);
+      // send user message to backend
+      const response = await fetch(
+        "https://chatbot-api-yuzt4.ondigitalocean.app/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: newMessage.text,
+            session_id: sessionId,
+          }),
+        }
+      );
+      console.log("response: ", response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        const blockMessage = errorData.detail;
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: blockMessage, sender: "system", type: "block" },
+        ]);
+        setLoading(false);
+      } else {
+        // read the stream & process it as chunks arrive
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+        let accumulatedMessage = "";
 
-      //simulate api call
-      const botResponse = await fetchBotResponse(userInput);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: "", sender: "bot" },
+        ]);
+        setLoading(false);
+        while (!done) {
+          const { value, done: doneReading } = await reader.read();
+          done = doneReading;
+          const chunk = decoder.decode(value);
 
-      //update messages
-      setMessages([
-        ...messages,
-        newMessage,
-        { text: botResponse, sender: "bot" },
-      ]);
+          if (chunk) {
+            accumulatedMessage += chunk;
+
+            // update last message in the array
+            setMessages((prevMessages) => {
+              const updatedMessages = [...prevMessages];
+              updatedMessages[updatedMessages.length - 1] = {
+                text: accumulatedMessage,
+                sender: "bot",
+              };
+              return updatedMessages;
+            });
+          }
+        }
+        //get the followup questions
+        const followupResponse = await fetch(
+          `http://localhost:8000/chat/followup/${sessionId}`
+        );
+        const followupData = await followupResponse.json();
+        setFollowUpQuestions(followupData.followUp);
+      }
     }
+  };
+
+  const handleFollowUpClick = (question) => {
+    setUserInput(question);
+    handleSend();
   };
 
   const handleKeyDown = (e) => {
@@ -50,10 +126,17 @@ const ChatWindow = ({ onClose }) => {
   };
 
   return (
-    <div className="chat-window-container">
+    <div className="flex flex-col h-full">
       <ChatHeader onClose={onClose} />
-      <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
-      <div className="chat-window-input-container">
+      <ChatMessages
+        messages={messages}
+        messagesEndRef={messagesEndRef}
+        followUpQuestions={followUpQuestions}
+        handleFollowUpClick={handleFollowUpClick}
+        loading={loading}
+      />
+
+      <div className="p-2">
         <ChatInput
           userInput={userInput}
           setUserInput={setUserInput}

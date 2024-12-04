@@ -1,12 +1,11 @@
 import React from "react";
-import "./chat-header.css"; // Import the CSS Module
 
 const ChatHeader = ({ onClose }) => {
   return (
-    <div className="chat-header">
-      <h1 className="chat-title">ChatWindow</h1>
-      <button onClick={onClose} className="chat-close-button">
-        <i className="fas fa-xmark transparent-background"></i>
+    <div className="bg-blue-500 sm:rounded-lg text-white flex justify-between items-center py-3 px-4 mb-2">
+      <h1 className="text-lg font-bold">ChatWindow</h1>
+      <button onClick={onClose} className="text-white font-bold text-lg">
+        <i className="fa-solid fa-xmark" />
       </button>
     </div>
   );

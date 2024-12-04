@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import ChatWindow from "./ChatWindow";
-import "./chat-widget.css";
 
 const ChatWidget = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const toggleChatWindow = () => {
     setIsChatOpen(!isChatOpen);
@@ -13,19 +11,14 @@ const ChatWidget = () => {
   return (
     <div>
       {isChatOpen ? (
-        <div className="chat-widget-chat-window-container">
+        <div className="w-screen h-screen sm:fixed sm:bottom-5 sm:right-5 sm:z-50 sm:max-w-md sm:mx-auto sm:h-auto bg-white shadow-lg sm:rounded-lg overflow-hidden">
           <ChatWindow onClose={toggleChatWindow} />
         </div>
       ) : (
-        <div className="chat-window-button-container">
+        <div className="fixed bottom-5 right-5 z-50">
           <button
             onClick={toggleChatWindow}
-            className={`chat-window-chat-button ${
-              isHovered && "chat-window-chat-button-hover"
-            }`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            type="button"
+            className="bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 animate-pulse"
           >
             Deschide chat-ul
           </button>

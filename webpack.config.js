@@ -10,15 +10,19 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx)$/, // Process JS/JSX files with Babel
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
       },
       {
-        test: /\.css$/, // This rule will handle CSS files
-        use: ["style-loader", "css-loader"], // Loaders to handle the CSS
+        test: /\.css$/, // This rule should apply only to .css files
+        use: [
+          "style-loader", // Injects styles into the DOM
+          "css-loader", // Resolves CSS imports
+          "postcss-loader", // Processes the CSS with PostCSS (needed for Tailwind)
+        ],
       },
     ],
   },
