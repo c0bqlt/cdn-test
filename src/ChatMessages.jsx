@@ -9,6 +9,15 @@ const ChatMessages = ({
   handleFollowUpClick,
   loading,
 }) => {
+  const systemMessage = {
+    text: "Salut! Cum te pot ajuta?",
+    sender: "system",
+  };
+
+  if (messages.length === 0) {
+    messages.push(systemMessage);
+  }
+
   return (
     <div className="flex-grow sm:h-80 overflow-y-auto mb-4 p-2">
       {messages.map((msg, index) => (
@@ -17,7 +26,7 @@ const ChatMessages = ({
       {loading && (
         <div className="text-left rtl:text-right max-w-40 rounded-lg px-4 py-2 bg-gray-300 flex justify-center items-center">
           <div
-            className="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full border-gray-600 border-t-blue-500"
+            className="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full border-gray-600 border-t-primary"
             role="status"
           >
             <span className="sr-only">Loading...</span>

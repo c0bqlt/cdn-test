@@ -6,7 +6,12 @@ module.exports = {
     "./src/**/*.jsx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#00765F",
+        primary_hover: "#00765F",
+      },
+    },
   },
   plugins: [],
 };
