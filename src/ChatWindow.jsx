@@ -21,7 +21,7 @@ const ChatWindow = ({ onClose }) => {
 
       const fetchPreviousMessages = async () => {
         const response = await fetch(
-          `https://chatbot-api-yuzt4.ondigitalocean.app/history/${fingerprintId}`
+          `${process.env.BACKEND_URL}/history/${fingerprintId}`
         );
         const data = await response.json();
         setMessages(data.messages || []);
@@ -51,20 +51,16 @@ const ChatWindow = ({ onClose }) => {
       setUserInput("");
       setLoading(true);
       // send user message to backend
-      const response = await fetch(
-        "https://chatbot-api-yuzt4.ondigitalocean.app/chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: newMessage.text,
-            session_id: sessionId,
-          }),
-        }
-      );
-      console.log("response: ", response);
+      const response = await fetch(`${process.env.BACKEND_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: newMessage.text,
+          session_id: sessionId,
+        }),
+      });
       if (!response.ok) {
         const errorData = await response.json();
         const blockMessage = errorData.detail;
@@ -106,7 +102,7 @@ const ChatWindow = ({ onClose }) => {
         }
         //get the followup questions
         const followupResponse = await fetch(
-          `http://localhost:8000/chat/followup/${sessionId}`
+          `${process.env.BACKEND_URL}/chat/followup/${sessionId}`
         );
         const followupData = await followupResponse.json();
         setFollowUpQuestions(followupData.followUp);
