@@ -2,7 +2,7 @@ import React from "react";
 
 const MarkdownComponents = {
   a: ({ href, children }) => (
-    <a href={href} className="text-primary hover:underline">
+    <a href={href} className="text-primary hover:underline" target="_blank">
       {children}
     </a>
   ),
