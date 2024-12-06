@@ -25,6 +25,10 @@ module.exports = {
           "postcss-loader", // Processes the CSS with PostCSS (needed for Tailwind)
         ],
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i, // Match image file types
+        type: "asset/resource", // This will emit the file and return the URL
+      },
     ],
   },
   resolve: {
