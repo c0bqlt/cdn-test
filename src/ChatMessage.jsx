@@ -30,6 +30,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
             wordWrap: "normal",
             overflowWrap: "break-word",
             whiteSpace: "normal",
+            lineHeight: "1.2",
           }}
         >
           <ReactMarkdown components={MarkdownComponents}>{text}</ReactMarkdown>
