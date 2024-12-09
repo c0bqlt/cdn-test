@@ -27,7 +27,7 @@ const ChatMessages = ({
       {loading && (
         <div className="flex justify-start items-end">
           <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
-          <div className="text-left rtl:text-right max-w-40 rounded-lg rounded-bl-none px-4 py-2 bg-gray-300 flex justify-center items-center px-4 p-2 mb-2">
+          <div className="text-left rtl:text-right max-w-40 rounded-lg rounded-bl-none py-2 bg-gray-300 flex justify-center items-center px-4 p-2 mb-2">
             <div
               className="spinner-border animate-spin inline-block w-6 h-6 border-4 rounded-full border-gray-600 border-t-primary"
               role="status"

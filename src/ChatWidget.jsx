@@ -11,7 +11,7 @@ const ChatWidget = () => {
   return (
     <div>
       {isChatOpen ? (
-        <div className="w-screen h-screen sm:fixed sm:bottom-5 sm:right-5 sm:z-50 sm:max-w-md sm:mx-auto sm:h-auto bg-white shadow-lg sm:rounded-lg overflow-hidden">
+        <div className="w-screen h-screen fixed sm:bottom-5 sm:right-5 sm:z-50 sm:max-w-md sm:mx-auto sm:h-auto bg-white shadow-lg sm:rounded-lg overflow-hidden">
           <ChatWindow onClose={toggleChatWindow} />
         </div>
       ) : (
