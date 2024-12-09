@@ -46,7 +46,11 @@ const ChatWindow = ({ onClose }) => {
   const handleSend = async () => {
     setFollowUpQuestions([]);
     if (userInput.trim()) {
-      const newMessage = { text: userInput, sender: "user" };
+      const newMessage = {
+        text: userInput,
+        sender: "user",
+        createdAt: new Date(),
+      };
       setMessages([...messages, newMessage]);
       setUserInput("");
       setLoading(true);

@@ -13,6 +13,7 @@ const ChatMessages = ({
   const systemMessage = {
     text: "Salut! Cum te pot ajuta?",
     sender: "system",
+    createdAt: new Date(),
   };
 
   if (messages.length === 0) {
@@ -22,7 +23,12 @@ const ChatMessages = ({
   return (
     <div className="flex-grow sm:h-80 overflow-y-auto mb-4 p-2">
       {messages.map((msg, index) => (
-        <ChatMessage key={index} text={msg.text} sender={msg.sender} />
+        <ChatMessage
+          key={index}
+          text={msg.text}
+          sender={msg.sender}
+          createdAt={msg?.createdAt}
+        />
       ))}
       {loading && (
         <div className="flex justify-start items-end">
