@@ -10,7 +10,6 @@ const ChatMessages = ({
   handleFollowUpClick,
   loading,
 }) => {
-  console.log("messages: ", messages);
   const systemMessage = {
     text: "Salut! Cum te pot ajuta?",
     sender: "bot",
