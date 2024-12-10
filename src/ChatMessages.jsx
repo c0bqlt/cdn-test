@@ -10,9 +10,10 @@ const ChatMessages = ({
   handleFollowUpClick,
   loading,
 }) => {
+  console.log("messages: ", messages);
   const systemMessage = {
     text: "Salut! Cum te pot ajuta?",
-    sender: "system",
+    sender: "bot",
     createdAt: new Date(),
   };
 

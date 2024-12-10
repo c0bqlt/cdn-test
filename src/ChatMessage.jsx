@@ -15,7 +15,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
         sender === "user" ? "justify-end" : "justify-start"
       } items-end`}
     >
-      {sender === "system" && (
+      {sender === "bot" && (
         <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
       )}
 
