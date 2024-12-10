@@ -4,10 +4,16 @@ import React from "react";
 import chatbotAvatar from "./assets/chatbot-avatar.png";
 
 const ChatMessage = ({ text, sender, createdAt }) => {
-  const formattedTime = new Date(createdAt).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
+  };
+
+  const formattedTime = isValidDate(createdAt)
+    ? new Date(createdAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
 
   return (
     <div
