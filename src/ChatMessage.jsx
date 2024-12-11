@@ -19,7 +19,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
     <div
       className={`flex ${
         sender === "user" ? "justify-end" : "justify-start"
-      } items-end`}
+      } items-start`}
     >
       {sender === "bot" && (
         <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
@@ -30,7 +30,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
           className={`max-w-72 md:max-w-64 rounded-lg px-4 p-2 mb-1 ${
             sender === "user"
               ? "bg-primary text-white rounded-br-none"
-              : "bg-gray-300 text-gray-900 rounded-bl-none"
+              : "bg-gray-300 text-gray-900 rounded-tl-none"
           }`}
           style={{
             wordWrap: "normal",
