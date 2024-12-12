@@ -9,7 +9,7 @@ const ChatWidget = () => {
   };
 
   return (
-    <div>
+    <div className={`relative ${isChatOpen ? "overflow-hidden h-screen" : ""}`}>
       {isChatOpen ? (
         <div className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md h-full sm:h-auto sm:top-auto sm:bottom-5 sm:left-auto sm:translate-x-0 sm:right-5 bg-white shadow-lg sm:rounded-lg overflow-hidden z-[1000]">
           <ChatWindow onClose={toggleChatWindow} />
