@@ -9,7 +9,7 @@ const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
         onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Scrie un mesaj..."
-        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-base"
       />
       <button
         onClick={handleSend}
