@@ -49,7 +49,7 @@ const ChatWindow = ({ onClose }) => {
       const newMessage = {
         text: userInput,
         sender: "user",
-        createdAt: new Date(),
+        timestamp: new Date(),
       };
       setMessages([...messages, newMessage]);
       setUserInput("");

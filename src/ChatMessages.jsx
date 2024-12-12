@@ -13,7 +13,7 @@ const ChatMessages = ({
   const systemMessage = {
     text: "Salut! Cum te pot ajuta?",
     sender: "bot",
-    createdAt: new Date(),
+    timestamp: new Date(),
   };
 
   if (messages.length === 0) {
@@ -27,7 +27,7 @@ const ChatMessages = ({
           key={index}
           text={msg.text}
           sender={msg.sender}
-          createdAt={msg?.createdAt}
+          createdAt={msg?.timestamp}
         />
       ))}
       {loading && (

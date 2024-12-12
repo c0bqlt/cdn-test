@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
   return (
-    <div className="flex items-center mb-6 sm:mb-0">
+    <div className="flex items-center mb-5 sm:mb-0">
       <input
         type="text"
         value={userInput}
