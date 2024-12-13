@@ -80,10 +80,7 @@ const ChatWindow = ({ onClose }) => {
         let done = false;
         let accumulatedMessage = "";
 
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: "", sender: "bot" },
-        ]);
+        setMessages((prevMessages) => [...prevMessages, { sender: "bot" }]);
         setLoading(false);
         while (!done) {
           const { value, done: doneReading } = await reader.read();
