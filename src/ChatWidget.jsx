@@ -43,9 +43,9 @@ const ChatWidget = () => {
         <div className="fixed bottom-5 right-5 z-[1000]">
           <button
             onClick={toggleChatWindow}
-            className="bg-primary text-white p-4 px-5 rounded-full shadow-lg hover:bg-primary_hover animate-pulse"
+            className="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary_hover animate-pulse"
           >
-            <i className="fa-regular fa-message" />
+            <i className="fa-regular fa-message mx-1" />
           </button>
         </div>
       )}
