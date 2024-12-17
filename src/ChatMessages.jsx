@@ -43,10 +43,10 @@ const ChatMessages = ({
           </div>
         </div>
       )}
-      <FollowUp
+      {/* <FollowUp
         followUpQuestions={followUpQuestions}
         handleFollowUpClick={handleFollowUpClick}
-      />
+      /> */}
       <div ref={messagesEndRef} />
     </div>
   );
