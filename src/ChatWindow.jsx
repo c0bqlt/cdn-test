@@ -11,6 +11,7 @@ const ChatWindow = ({ onClose }) => {
   const messagesEndRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const botMessageIndexRef = useRef(null); // Persistent index for the bot message
 
   useEffect(() => {
     const initializeFingerprint = async () => {
@@ -51,63 +52,113 @@ const ChatWindow = ({ onClose }) => {
         sender: "user",
         timestamp: new Date(),
       };
+
       setMessages([...messages, newMessage]);
       setUserInput("");
-      setLoading(true);
-      // send user message to backend
-      const response = await fetch(`${process.env.BACKEND_URL}/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: newMessage.text,
-          session_id: sessionId,
-        }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        const blockMessage = errorData.detail;
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: blockMessage, sender: "system", type: "block" },
-        ]);
-        setLoading(false);
-      } else {
-        // read the stream & process it as chunks arrive
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        let accumulatedMessage = "";
+      setLoading(true); // Start loading
 
-        setMessages((prevMessages) => [...prevMessages, { sender: "bot" }]);
-        setLoading(false);
-        while (!done) {
-          const { value, done: doneReading } = await reader.read();
-          done = doneReading;
-          const chunk = decoder.decode(value);
+      const timeoutDuration = 10000; // Timeout duration in ms
 
-          if (chunk) {
-            accumulatedMessage += chunk;
+      // Function to attempt fetch with retries
+      const fetchWithRetry = async (retryCount = 1) => {
+        for (let attempt = 0; attempt <= retryCount; attempt++) {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), timeoutDuration);
 
-            // update last message in the array
-            setMessages((prevMessages) => {
-              const updatedMessages = [...prevMessages];
-              updatedMessages[updatedMessages.length - 1] = {
-                text: accumulatedMessage,
-                sender: "bot",
-              };
-              return updatedMessages;
+          try {
+            const response = await fetch(`${process.env.BACKEND_URL}/chat`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                message: newMessage.text,
+                session_id: sessionId,
+              }),
+              signal: controller.signal,
             });
+
+            setLoading(false);
+
+            clearTimeout(timeout);
+
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let done = false;
+            let accumulatedMessage = "";
+
+            // Add bot message placeholder ONCE
+            if (botMessageIndexRef.current === null) {
+              setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+                updatedMessages.push({ text: "", sender: "bot" });
+                botMessageIndexRef.current = updatedMessages.length - 1; // Store index
+                return updatedMessages;
+              });
+            }
+
+            // Stream response and update the placeholder
+            while (!done) {
+              const { value, done: doneReading } = await reader.read();
+              done = doneReading;
+              const chunk = decoder.decode(value);
+
+              if (chunk) {
+                accumulatedMessage += chunk;
+
+                // Update the bot message in place
+                setMessages((prevMessages) => {
+                  const updatedMessages = [...prevMessages];
+                  updatedMessages[botMessageIndexRef.current] = {
+                    text: accumulatedMessage,
+                    sender: "bot",
+                  };
+                  return updatedMessages;
+                });
+              }
+            }
+
+            // Reset botMessageIndexRef and loading state after success
+            botMessageIndexRef.current = null;
+            setLoading(false);
+
+            // Fetch follow-up questions
+            const followupResponse = await fetch(
+              `${process.env.BACKEND_URL}/chat/followup/${sessionId}`
+            );
+            const followupData = await followupResponse.json();
+            setFollowUpQuestions(followupData.followUp);
+
+            return; // Success, exit retry loop
+          } catch (err) {
+            clearTimeout(timeout);
+            if (err.name === "AbortError") {
+              console.error("Request timed out. Retrying...");
+            } else {
+              console.error(`Attempt ${attempt + 1} failed:`, err.message);
+            }
+
+            if (attempt === retryCount) {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                  text: "Mesajul nu s-a putut trimite. Vă rugăm să încercați mai târziu.",
+                  sender: "bot",
+                },
+              ]);
+              botMessageIndexRef.current = null;
+              setLoading(false); // Ensure loading is reset even after failure
+            }
           }
         }
-        //get the followup questions
-        const followupResponse = await fetch(
-          `${process.env.BACKEND_URL}/chat/followup/${sessionId}`
-        );
-        const followupData = await followupResponse.json();
-        setFollowUpQuestions(followupData.followUp);
-      }
+      };
+
+      await fetchWithRetry(1); // Retry once
+      setLoading(false); // Extra safeguard to reset loading
     }
   };
 
