@@ -5,39 +5,40 @@ const ChatWidget = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
-    const style = document.createElement("style");
-    style.id = "no-scroll-style";
-    style.textContent = `
-      .no-scroll {
-        overflow: hidden;
-        height: 100vh;
-      }
-      @media (max-width: 768px) {
+    const applyNoScrollStyle = () => {
+      const style = document.createElement("style");
+      style.id = "no-scroll-style";
+      style.textContent = `
         .no-scroll {
-          touch-action: none;
+          overflow: hidden;
+          height: 100vh;
         }
-      }
-    `;
-    document.head.appendChild(style);
+      `;
+      document.head.appendChild(style);
 
-    return () => {
-      const existingStyle = document.getElementById("no-scroll-style");
-      if (existingStyle) {
-        document.head.removeChild(existingStyle);
-      }
+      return () => {
+        const existingStyle = document.getElementById("no-scroll-style");
+        if (existingStyle) {
+          document.head.removeChild(existingStyle);
+        }
+      };
     };
+
+    applyNoScrollStyle();
   }, []);
 
   const toggleChatWindow = () => {
-    setIsChatOpen(!isChatOpen);
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    setIsChatOpen((prevState) => !prevState);
 
     if (!isChatOpen) {
-      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      document.body.classList.add("no-scroll");
       if (isMobile) {
-        document.body.classList.add("no-scroll");
+        document.body.style.touchAction = "none";
       }
     } else {
       document.body.classList.remove("no-scroll");
+      document.body.style.touchAction = ""; // Reset touch action when closed
     }
   };
 
