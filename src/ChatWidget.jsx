@@ -11,7 +11,11 @@ const ChatWidget = () => {
       .no-scroll {
         overflow: hidden;
         height: 100vh;
-        touch-action: none;
+      }
+      @media (max-width: 768px) {
+        .no-scroll {
+          touch-action: none;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -28,7 +32,10 @@ const ChatWidget = () => {
     setIsChatOpen(!isChatOpen);
 
     if (!isChatOpen) {
-      document.body.classList.add("no-scroll");
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      if (isMobile) {
+        document.body.classList.add("no-scroll");
+      }
     } else {
       document.body.classList.remove("no-scroll");
     }
