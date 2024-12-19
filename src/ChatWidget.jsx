@@ -31,14 +31,11 @@ const ChatWidget = () => {
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     setIsChatOpen((prevState) => !prevState);
 
-    if (!isChatOpen) {
+    if (!isChatOpen && isMobile) {
       document.body.classList.add("no-scroll");
-      if (isMobile) {
-        document.body.style.touchAction = "none";
-      }
+      document.body.style.touchAction = "none";
     } else {
       document.body.classList.remove("no-scroll");
-      document.body.style.touchAction = ""; // Reset touch action when closed
     }
   };
 
