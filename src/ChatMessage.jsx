@@ -15,23 +15,40 @@ const ChatMessage = ({ text, sender, createdAt }) => {
       })
     : "";
 
+  // Determine styling based on sender type
+  const getMessageStyles = (sender) => {
+    if (sender === "error") {
+      return {
+        container:
+          "bg-red-100 text-red-800 rounded-md border border-red-500 text-center",
+        icon: "⚠️",
+        wrapper: "justify-center", // Center the error message
+      };
+    }
+    return sender === "user"
+      ? {
+          container: "bg-primary text-white rounded-br-none",
+          icon: null,
+          wrapper: "justify-end",
+        }
+      : {
+          container: "bg-gray-300 text-gray-900 rounded-tl-none",
+          icon: null,
+          wrapper: "justify-start",
+        };
+  };
+
+  const { container, icon, wrapper } = getMessageStyles(sender);
+
   return (
-    <div
-      className={`flex ${
-        sender === "user" ? "justify-end" : "justify-start"
-      } items-start`}
-    >
+    <div className={`flex ${wrapper} items-start`}>
       {sender === "bot" && (
         <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
       )}
 
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-center">
         <div
-          className={`max-w-72 md:max-w-64 rounded-lg px-4 p-2 mb-1 ${
-            sender === "user"
-              ? "bg-primary text-white rounded-br-none"
-              : "bg-gray-300 text-gray-900 rounded-tl-none"
-          }`}
+          className={`max-w-72 md:max-w-64 rounded-lg px-4 p-2 mb-1 ${container}`}
           style={{
             wordWrap: "normal",
             overflowWrap: "break-word",
@@ -39,9 +56,12 @@ const ChatMessage = ({ text, sender, createdAt }) => {
             lineHeight: "1.2",
           }}
         >
+          {icon && <span className="mr-2">{icon}</span>}
           <ReactMarkdown components={MarkdownComponents}>{text}</ReactMarkdown>
         </div>
-        <span className="text-xs text-gray-500">{formattedTime}</span>
+        {sender !== "error" && (
+          <span className="text-xs text-gray-500">{formattedTime}</span>
+        )}
       </div>
     </div>
   );

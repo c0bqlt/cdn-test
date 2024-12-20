@@ -147,7 +147,7 @@ const ChatWindow = ({ onClose }) => {
                 ...prevMessages,
                 {
                   text: "Mesajul nu s-a putut trimite. Vă rugăm să încercați mai târziu.",
-                  sender: "bot",
+                  sender: "error",
                 },
               ]);
               botMessageIndexRef.current = null;
