@@ -4,45 +4,26 @@ import ChatWindow from "./ChatWindow";
 const ChatWidget = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  // Prevent scrolling when chat is open on mobile
   useEffect(() => {
-    const applyNoScrollStyle = () => {
-      const style = document.createElement("style");
-      style.id = "no-scroll-style";
-      style.textContent = `
-        .no-scroll {
-          overflow: hidden;
-          height: 100vh;
-          touch-action: none;
-        }
-      `;
-      document.head.appendChild(style);
-
-      return () => {
-        const existingStyle = document.getElementById("no-scroll-style");
-        if (existingStyle) {
-          document.head.removeChild(existingStyle);
-        }
-      };
-    };
-
-    applyNoScrollStyle();
-  }, []);
+    if (isChatOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isChatOpen]);
 
   const toggleChatWindow = () => {
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
     setIsChatOpen((prevState) => !prevState);
-
-    if (!isChatOpen && isMobile) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
   };
 
   return (
     <div>
       {isChatOpen ? (
-        <div className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md h-full sm:h-auto sm:top-auto sm:bottom-5 sm:left-auto sm:translate-x-0 sm:right-5 bg-white shadow-lg sm:rounded-lg overflow-hidden z-[1000]">
+        <div
+          className="fixed inset-0 sm:inset-auto sm:bottom-5 sm:right-5 bg-white shadow-lg sm:rounded-lg overflow-hidden z-[1000] 
+            w-screen h-screen sm:w-[320px] sm:h-[500px]"
+        >
           <ChatWindow onClose={toggleChatWindow} />
         </div>
       ) : (
