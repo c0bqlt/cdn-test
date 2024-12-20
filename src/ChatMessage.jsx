@@ -15,7 +15,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
       })
     : "";
 
-  // Determine styling based on sender type
+  // Determine styling and alignment based on sender type
   const getMessageStyles = (sender) => {
     if (sender === "error") {
       return {
@@ -23,6 +23,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
           "bg-red-100 text-red-800 rounded-md border border-red-500 text-center",
         icon: "⚠️",
         wrapper: "justify-center", // Center the error message
+        timestampAlignment: null,
         includeTimestamp: false,
       };
     }
@@ -31,17 +32,19 @@ const ChatMessage = ({ text, sender, createdAt }) => {
           container: "bg-primary text-white rounded-br-none",
           icon: null,
           wrapper: "justify-end",
+          timestampAlignment: "text-left",
           includeTimestamp: true,
         }
       : {
           container: "bg-gray-300 text-gray-900 rounded-tl-none",
           icon: null,
           wrapper: "justify-start",
+          timestampAlignment: "text-right",
           includeTimestamp: true,
         };
   };
 
-  const { container, icon, wrapper, includeTimestamp } =
+  const { container, icon, wrapper, timestampAlignment, includeTimestamp } =
     getMessageStyles(sender);
 
   return (
@@ -50,7 +53,7 @@ const ChatMessage = ({ text, sender, createdAt }) => {
         <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
       )}
 
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col">
         <div
           className={`max-w-72 md:max-w-64 rounded-lg px-4 p-2 mb-1 ${container}`}
           style={{
@@ -64,7 +67,13 @@ const ChatMessage = ({ text, sender, createdAt }) => {
           <ReactMarkdown components={MarkdownComponents}>{text}</ReactMarkdown>
         </div>
         {includeTimestamp && (
-          <span className="text-xs text-gray-500">{formattedTime}</span>
+          <span
+            className={`text-xs text-gray-500 ${
+              timestampAlignment === "text-left" ? "self-start" : "self-end"
+            }`}
+          >
+            {formattedTime}
+          </span>
         )}
       </div>
     </div>
