@@ -1,11 +1,15 @@
-const path = require("path");
+/*const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const Dotenv = require("dotenv-webpack");*/
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import Dotenv from "dotenv-webpack";
 
-module.exports = {
+export default  {
   entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    //path: path.resolve(__dirname, "dist"),
+    path: path.resolve(process.cwd(), "dist"),
     filename: "bundle.js",
   },
   module: {
