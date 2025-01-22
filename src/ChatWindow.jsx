@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { differenceInHours, parseISO } from "date-fns";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatHeader from "./ChatHeader";
@@ -11,6 +12,9 @@ const ChatWindow = ({ onClose }) => {
   const messagesEndRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const [resumePrompt, setResumePrompt] = useState(false);
+  const [startConvTimestamp, setStartConvTimestamp] = useState("");
+  const [fetchedMessages, setFetchedMessages] = useState(null);
   const botMessageIndexRef = useRef(null); // Persistent index for the bot message
 
   useEffect(() => {
@@ -20,21 +24,55 @@ const ChatWindow = ({ onClose }) => {
       const fingerprintId = result.visitorId;
       setSessionId(fingerprintId);
 
-      const fetchPreviousMessages = async () => {
+      const checkHistoryExists = async () => {
         const response = await fetch(
           `${process.env.BACKEND_URL}/history/${fingerprintId}`
         );
         const data = await response.json();
-        setMessages(data.messages || []);
+
+        if (data.messages && data.messages.length > 0) {
+          const lastMessageDate = parseISO(data.last_message_timestamp);
+          const convStart = parseISO(data.start_conv_timestamp);
+          const hoursDifference = differenceInHours(
+            new Date(),
+            lastMessageDate
+          );
+
+          if (hoursDifference > 12) {
+            // if more that 12h since past interaction, start fresh
+            setMessages([]);
+            setStartConvTimestamp(new Date().toISOString());
+          } else {
+            setFetchedMessages(data.messages); // store messages temporarily
+            setStartConvTimestamp(convStart.toISOString());
+            setResumePrompt(true);
+          }
+        } else {
+          setStartConvTimestamp(new Date().toISOString());
+          setMessages([]);
+        }
       };
 
-      fetchPreviousMessages();
+      checkHistoryExists();
     };
 
     if (!sessionId) {
       initializeFingerprint();
     }
   }, []);
+
+  const handleUserChoice = (choice) => {
+    setResumePrompt(false);
+    if (choice === "resume") {
+      if (fetchedMessages) {
+        setMessages(fetchedMessages); // use the temporarily stored messages to display history
+      }
+    } else {
+      setMessages([]); // clear messages in case of start from sratch
+      setFetchedMessages(null);
+      setStartConvTimestamp(new Date().toISOString());
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,6 +112,7 @@ const ChatWindow = ({ onClose }) => {
               body: JSON.stringify({
                 message: newMessage.text,
                 session_id: sessionId,
+                start_conv_timestamp: startConvTimestamp,
               }),
               signal: controller.signal,
             });
@@ -116,6 +155,7 @@ const ChatWindow = ({ onClose }) => {
                   updatedMessages[botMessageIndexRef.current] = {
                     text: accumulatedMessage,
                     sender: "bot",
+                    timestamp: new Date(),
                   };
                   return updatedMessages;
                 });
@@ -182,6 +222,8 @@ const ChatWindow = ({ onClose }) => {
         followUpQuestions={followUpQuestions}
         handleFollowUpClick={handleFollowUpClick}
         loading={loading}
+        resumePrompt={resumePrompt}
+        handleUserChoice={handleUserChoice}
       />
 
       <div className="p-2">

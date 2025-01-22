@@ -2,18 +2,19 @@ import ReactMarkdown from "react-markdown";
 import MarkdownComponents from "./MarkdownComponents";
 import React from "react";
 import chatbotAvatar from "./assets/chatbot-avatar.png";
+import {isValid, parseISO,format } from "date-fns";
+import { te } from "date-fns/locale";
+
 
 const ChatMessage = ({ text, sender, createdAt }) => {
-  const isValidDate = (date) => {
-    return !isNaN(Date.parse(date));
-  };
+  const parsedDate =
+    typeof createdAt === "string" ? parseISO(createdAt) : createdAt;
 
-  const formattedTime = isValidDate(createdAt)
-    ? new Date(createdAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+  const formattedTime = isValid(parsedDate)
+    ? format(parsedDate, "HH:mm") 
     : "";
+
+  console.log(text, createdAt, parsedDate, formattedTime);
 
   // Determine styling and alignment based on sender type
   const getMessageStyles = (sender) => {
