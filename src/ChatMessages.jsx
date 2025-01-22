@@ -1,6 +1,7 @@
 import ChatMessage from "./ChatMessage";
 import FollowUp from "./FollowUp";
 import React from "react";
+import ResumePromptMessage from "./ResumePromptMessage";
 import chatbotAvatar from "./assets/chatbot-avatar.png";
 
 const ChatMessages = ({
@@ -9,6 +10,8 @@ const ChatMessages = ({
   followUpQuestions,
   handleFollowUpClick,
   loading,
+  resumePrompt,
+  handleUserChoice,
 }) => {
   const systemMessage = {
     text: "Salut! Cum te pot ajuta?",
@@ -16,13 +19,15 @@ const ChatMessages = ({
     timestamp: new Date(),
   };
 
-  if (messages.length === 0) {
-    messages.push(systemMessage);
+  // Only add the system message if it's a completely new conv
+  const displayMessages = [...messages];
+  if (displayMessages.length === 0 && !resumePrompt) {
+    displayMessages.push(systemMessage);
   }
 
   return (
     <div className="flex-grow sm:h-80 overflow-y-auto mb-4 p-2">
-      {messages.map((msg, index) => (
+      {displayMessages.map((msg, index) => (
         <ChatMessage
           key={index}
           text={msg.text}
@@ -30,6 +35,9 @@ const ChatMessages = ({
           createdAt={msg?.timestamp}
         />
       ))}
+      {resumePrompt && (
+        <ResumePromptMessage handleUserChoice={handleUserChoice} />
+      )}
       {loading && (
         <div className="flex justify-start items-end">
           <img src={chatbotAvatar} alt="chatbot avatar" className="h-8 mr-2" />
