@@ -14,8 +14,6 @@ const ChatMessage = ({ text, sender, createdAt }) => {
     ? format(parsedDate, "HH:mm") 
     : "";
 
-  console.log(text, createdAt, parsedDate, formattedTime);
-
   // Determine styling and alignment based on sender type
   const getMessageStyles = (sender) => {
     if (sender === "error") {
