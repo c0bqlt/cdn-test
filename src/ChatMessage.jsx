@@ -3,8 +3,6 @@ import MarkdownComponents from "./MarkdownComponents";
 import React from "react";
 import chatbotAvatar from "./assets/chatbot-avatar.png";
 import {isValid, parseISO,format } from "date-fns";
-import { te } from "date-fns/locale";
-
 
 const ChatMessage = ({ text, sender, createdAt }) => {
   const parsedDate =

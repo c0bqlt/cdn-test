@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { differenceInHours, parseISO } from "date-fns";
+import { differenceInHours, differenceInMinutes, parseISO } from "date-fns";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatHeader from "./ChatHeader";
@@ -37,15 +37,20 @@ const ChatWindow = ({ onClose }) => {
             new Date(),
             lastMessageDate
           );
+          const minutesDifference = differenceInMinutes(new Date(), lastMessageDate);
 
           if (hoursDifference > 12) {
             // if more that 12h since past interaction, start fresh
             setMessages([]);
             setStartConvTimestamp(new Date().toISOString());
           } else {
-            setFetchedMessages(data.messages); // store messages temporarily
             setStartConvTimestamp(convStart.toISOString());
-            setResumePrompt(true);
+            if(minutesDifference < 15) {
+              setMessages(data.messages); // automatically resume if last message was less than 15 minutes ago
+            } else {
+            setFetchedMessages(data.messages); // store messages temporarily
+            setResumePrompt(true); // prompt user to resume or start fresh
+            }
           }
         } else {
           setStartConvTimestamp(new Date().toISOString());
