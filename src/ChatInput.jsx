@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
+const ChatInput = ({ userInput, setUserInput, handleSend }) => {
   // Adjust the textarea height dynamically
   const handleInput = (e) => {
     e.target.style.height = "auto"; // Reset height to auto
@@ -15,6 +15,19 @@ const ChatInput = ({ userInput, setUserInput, handleSend, handleKeyDown }) => {
     const textarea = document.querySelector("textarea"); // Select the textarea
     if (textarea) {
       textarea.style.height = "auto"; // Reset height
+    }
+  };
+
+  // Handle sending the message on Enter key press
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevents new line in textarea
+      handleSend();
+      setUserInput(""); 
+      const textarea = document.querySelector("textarea"); 
+      if (textarea) {
+        textarea.style.height = "auto"; 
+      }
     }
   };
 

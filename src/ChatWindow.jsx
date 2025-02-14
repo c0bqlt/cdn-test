@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { differenceInHours, differenceInMinutes, parseISO } from "date-fns";
+import React, { useEffect, useRef, useState } from "react";
+import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
-import ChatHeader from "./ChatHeader";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const ChatWindow = ({ onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -37,19 +37,22 @@ const ChatWindow = ({ onClose }) => {
             new Date(),
             lastMessageDate
           );
-          const minutesDifference = differenceInMinutes(new Date(), lastMessageDate);
+          const minutesDifference = differenceInMinutes(
+            new Date(),
+            lastMessageDate
+          );
 
-          if (hoursDifference > 12) {
-            // if more that 12h since past interaction, start fresh
+          if (hoursDifference > 24) {
+            // if more that 24h since past interaction, start fresh
             setMessages([]);
             setStartConvTimestamp(new Date().toISOString());
           } else {
             setStartConvTimestamp(convStart.toISOString());
-            if(minutesDifference < 15) {
+            if (minutesDifference < 15) {
               setMessages(data.messages); // automatically resume if last message was less than 15 minutes ago
             } else {
-            setFetchedMessages(data.messages); // store messages temporarily
-            setResumePrompt(true); // prompt user to resume or start fresh
+              setFetchedMessages(data.messages); // store messages temporarily
+              setResumePrompt(true); // prompt user to resume or start fresh
             }
           }
         } else {
@@ -212,12 +215,6 @@ const ChatWindow = ({ onClose }) => {
     handleSend();
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSend();
-    }
-  };
-
   return (
     <div className="flex flex-col h-full">
       <ChatHeader onClose={onClose} />
@@ -236,7 +233,6 @@ const ChatWindow = ({ onClose }) => {
           userInput={userInput}
           setUserInput={setUserInput}
           handleSend={handleSend}
-          handleKeyDown={handleKeyDown}
         />
       </div>
     </div>
