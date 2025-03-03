@@ -6,7 +6,7 @@ const ChatHeader = ({ onClose }) => {
     <div className="bg-primary sm:rounded-t-lg text-white flex justify-between items-center py-3 px-4 mb-2 h-14">
       <div className="flex items-center gap-2">
         <img src={logo} alt="logo" className="h-8" />
-        <h1 className="text-lg font-bold text-white normal-case">Benone</h1>
+        <h1 className="text-lg font-bold text-white normal-case">Ben</h1>
       </div>
       <button
         onClick={onClose}
